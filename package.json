@@ -7,6 +7,10 @@
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabdrol/signalk-triangle-tank-data.git"
+  },
   "keywords": ["signalk-node-server-plugin"],
   "author": "Fabian Tollenaar <fabian@decipher.industries> (https://decipher.industries)",
   "license": "Apache-2.0",
