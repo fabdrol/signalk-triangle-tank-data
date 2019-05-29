@@ -1,0 +1,16 @@
+{
+  "name": "signalk-triangle-tank-calculator",
+  "version": "1.0.9",
+  "description": "Signal K Node.js server plugin to calculate tank data from raw transducer data for a triangle-shaped tank",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["signalk-node-server-plugin"],
+  "author": "Fabian Tollenaar <fabian@decipher.industries> (https://decipher.industries)",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^3.4.5"
+  }
+}
