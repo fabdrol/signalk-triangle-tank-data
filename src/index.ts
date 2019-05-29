@@ -40,7 +40,8 @@ interface IPluginOptions {
   tankInstance: number,
   tankType: string,
   tankContentType: string,
-  tankName: string
+  tankName: string,
+  multiplier: number
 }
 
 export default function TriangleTankCalculator (app:any) {

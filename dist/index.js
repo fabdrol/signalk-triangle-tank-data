@@ -16,13 +16,19 @@ function TriangleTankCalculator(app) {
             'tankInstance',
             'tankType',
             'tankContentType',
-            'tankName'
+            'tankName',
+            'multiplier'
         ],
         properties: {
             input: {
                 type: 'string',
                 title: 'Signal K path to raw fuel sensor data',
                 default: 'vessels.self.sensors.fuel.0.raw.value'
+            },
+            multiplier: {
+                type: 'number',
+                title: 'A multiplier to modify the output ratio',
+                default: 1.0
             },
             tankInstance: {
                 type: 'number',
@@ -87,12 +93,12 @@ function TriangleTankCalculator(app) {
         id: 'triangle-tank-calculator',
         description: name,
         start: function (options) {
-            var input = options.input, minInputValue = options.minInputValue, maxInputValue = options.maxInputValue, minMappingValue = options.minMappingValue, maxMappingValue = options.maxMappingValue, tankDimensionsA = options.tankDimensionsA, tankDimensionsB = options.tankDimensionsB, tankDimensionsH = options.tankDimensionsH, tankInstance = options.tankInstance, tankType = options.tankType, tankContentType = options.tankContentType, tankName = options.tankName;
-            console.log("[triangle-tank-calculator] Options: " + JSON.stringify(options, null, 2));
-            console.log("[triangle-tank-calculator] Paths: " + JSON.stringify(app.streambundle.getAvailablePaths(), null, 2));
+            var input = options.input, minInputValue = options.minInputValue, maxInputValue = options.maxInputValue, minMappingValue = options.minMappingValue, maxMappingValue = options.maxMappingValue, tankDimensionsA = options.tankDimensionsA, tankDimensionsB = options.tankDimensionsB, tankDimensionsH = options.tankDimensionsH, tankInstance = options.tankInstance, tankType = options.tankType, tankContentType = options.tankContentType, tankName = options.tankName, multiplier = options.multiplier;
+            app.debug("Options: " + JSON.stringify(options, null, 2));
+            app.debug("Paths: " + JSON.stringify(app.streambundle.getAvailablePaths(), null, 2));
             var stream = app.streambundle.getSelfStream(input);
             stream.onValue(function (value) {
-                console.log("[triangle-tank-calculator] initial value = " + value);
+                app.debug("initial value = " + value);
                 var volume = 0;
                 var totalVolume = 0.5 * tankDimensionsB * tankDimensionsA * tankDimensionsH;
                 var ratio = 0;
@@ -102,19 +108,23 @@ function TriangleTankCalculator(app) {
                 if (value > maxInputValue) {
                     value = maxInputValue;
                 }
-                console.log("[triangle-tank-calculator] constrained value = " + value);
+                app.debug("constrained value = " + value);
                 value = mapValue(value, minInputValue, maxInputValue, minMappingValue, maxMappingValue);
                 volume = calculateVolume(value, tankDimensionsA, tankDimensionsB, tankDimensionsH);
-                console.log("[triangle-tank-calculator] mapped value = " + value);
-                console.log("[triangle-tank-calculator] volume = " + volume);
-                console.log("[triangle-tank-calculator] total volume = " + totalVolume);
+                app.debug("mapped value = " + value);
+                app.debug("volume = " + volume);
+                app.debug("total volume = " + totalVolume);
                 if (isNaN(value) || isNaN(volume)) {
                     return;
                 }
                 ratio = volume / totalVolume;
                 totalVolume = totalVolume * 0.000001;
                 volume = volume * 0.000001;
-                console.log("[triangle-tank-calculator] ratio = " + ratio);
+                app.debug("ratio = " + ratio);
+                if (typeof multiplier === 'number' && !isNaN(multiplier) && multiplier > 0) {
+                    ratio = ratio * multiplier;
+                    app.debug("multiplied ratio = " + ratio);
+                }
                 app.setProviderStatus("currentLevel = " + ratio.toFixed(2) + ", currentVolume = " + (volume / 0.000001).toFixed(4) + " cm3, capacity = " + (totalVolume / 0.000001).toFixed(4) + " cm3, type = " + tankContentType + ", name = " + tankName);
                 app.handleMessage(plugin.id, {
                     context: 'vessels.self',
