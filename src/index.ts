@@ -260,7 +260,8 @@ const calculateVolume = (input:number, a:number, b:number, h:number):number => {
   b1 = a1 * Math.tan(bc)
 
   // Step 4, output volume
-  return 0.5 * b1 * a1 * h
+  // Fix: the "1" used to be a 0.5, converting the volume for a triangle tank. That is not required
+  return 1 * b1 * a1 * h
 }
 
 const mapValue = (x:number, in_min:number, in_max:number, out_min:number, out_max:number):number => {

@@ -1,6 +1,6 @@
 {
   "name": "signalk-triangle-tank-calculator",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Signal K Node.js server plugin to calculate tank data from raw transducer data for a triangle-shaped tank",
   "main": "index.js",
   "scripts": {

@@ -157,7 +157,7 @@ var calculateVolume = function (input, a, b, h) {
     c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
     bc = Math.atan(a / b);
     b1 = a1 * Math.tan(bc);
-    return 0.5 * b1 * a1 * h;
+    return 1 * b1 * a1 * h;
 };
 var mapValue = function (x, in_min, in_max, out_min, out_max) {
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
